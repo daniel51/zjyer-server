@@ -1,52 +1,64 @@
-// 在 Cloud code 里初始化 Express 框架
 var express = require('express');
-var app = express();
-
-// App 全局配置
-app.set('views','cloud/views');   // 设置模板目录
-app.set('view engine', 'ejs');    // 设置 template 引擎
-app.use(express.bodyParser());    // 读取请求 body 的中间件
-
-// 使用 Express 路由 API 服务 /hello 的 HTTP GET 请求
-app.get('/hello', function(req, res) {
-  res.render('hello', { message: 'Congrats, you just set up your app!' });
-});
-
-app.get('/jsonTest', function(req, res) {
-    //res.render('hello', { message: 'Congrats, you just set up your app!' });
-    var ip = req.headers['x-real-ip'];//获取ip地址
-    res.json({'users': '小明','age':25,'ipAddress':ip});
-});
-
-
-// 路由映射
-//var upload = require('cloud/upload.js');
-//app.use('/upload', upload);
-
-
-app.get('/upload', function(req, res) {
-    res.render('upload', {
-        title: '上传测试'
-    });
-});
-
+var ejs = require('ejs');
 var fs = require('fs');
-app.post('/upload', function(req, res){
-    var iconFile = req.files.iconImage;
-    if(iconFile){
-        fs.readFile(iconFile.path, function(err, data){
-            if(err)
-                return res.send('读取文件失败');
-            var base64Data = data.toString('base64');
-            var theFile = new AV.File(iconFile.name, {base64: base64Data});
-            theFile.save().then(function(theFile){
-                res.send('上传成功！');
-            });
-        });
-    }else
-        res.send('请选择一个文件。');
+var app = express();
+var baseUrl = 'http://localhost:3000';
+
+// erp routers
+var venueRouter = require('cloud/routers/erp/venue.js');
+
+// admin routers
+var clubEventRouter = require('cloud/routers/admin/clubevent.js');
+
+ejs.filters.formatDate = function (date) {
+	return date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() +' ' +
+		(date.getHours() < 10 ? ('0' + date.getHours()) : date.getHours()) + ':' +
+		(date.getMinutes() < 10 ? ('0' + date.getMinutes()) : date.getMinutes());
+};
+ejs.filters.formatString = function (str, limit) {
+	return str.length > limit ? str.substr(0, limit) + '...' : str;
+};
+// application configuration
+app.engine('html', ejs.renderFile);
+app.set('views','cloud/views');
+app.set('view engine', 'html');
+
+// middleware
+app.use(express.bodyParser());
+app.use(express.cookieParser());
+app.use(express.session({secret: 'ledong'}));
+app.use(express.csrf({cookie: true}));
+app.use(function (req, res, next) {req.baseUrl = baseUrl; next();});
+
+app.get('/test', function (req, res) {
+	AV.Cloud.run('getNearClubEvent', {latitude: '40.0273628', longitude: '116.3810654'}, {
+		success: function (result) {
+			// var date = result[0].get('starttime');
+			// var str = '';
+			// for (var p in date) {
+			// 	str = str + '--' + p;
+			// }
+
+			res.send(result);
+		},
+		error: function () {
+			res.send(500);
+		}
+	});
 });
 
+app.get('/', function (req, res) {
+	res.render('index', {title: '信息总览'});
+});
 
-// 最后，必须有这行代码来使 express 响应 HTTP 请求
+// erp
+app.get('/venue/add', venueRouter.get_addVenue);
+app.post('/venue/add', venueRouter.post_addVenue);
+
+// admin
+app.get('/admin/clubevent', clubEventRouter.get_clubEvent);
+app.get('/admin/deleteclubevent', clubEventRouter.get_deleteClubEvent);
+
+app.post('/upload', function (req, res) {var upfile = req.files.upfile; if (upfile) {fs.readFile(upfile.path, function (err, data) {if (err) {return res.send('error'); } var base64Data = data.toString('base64'); var file = new AV.File(upfile.name, {base64: base64Data}); file.save().then(function (file) {res.send('successful'); }); }); } else {res.send('select one file'); } });
 app.listen();
+app.use(function(req, res, next){res.status(404).render('404'); });

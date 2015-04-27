@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="renderer" content="webkit">
+	<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
+	<title>登录</title>
+	<style>
+	#login{position:relative;top:130px;display:block;width:250px;margin:0 auto;-webkit-animation:slide 1s ease-in;-moz-animation:slide 1s ease-in;-o-animation:slide 1s ease-in;}
+	@-webkit-keyframes slide{0% {opacity:0;top:80px;}100% {opacity:1;top:130px;}}
+	@-moz-keyframes slide{0% {opacity:0;top:80px;}100% {opacity:1;top:130px;}}
+	@-0-keyframes slide{0% {opacity:0;top:80px;}100% {opacity:1;top:130px;}}
+	</style>
+</head>
+<body>
+	<div id="login">
+		<div style="padding:15px 0;text-align:center;">
+			<img src="/imgs/avatar.png" alt="image">
+		</div>
+		<form id="loginForm" action="">
+			<div class="form-group">
+				<label for="username">用户名</label>
+				<input type="text" name="username" id="username" class="form-control" placeholder="请输入用户名" required>
+			</div>
+
+			<div class="form-group">
+				<label for="password">密码</label>
+				<input type="password" name="password" id="password" class="form-control" placeholder="请输入密码（6-12位）" maxlength="12" minlength="6" required>
+			</div>
+
+			<div class="form-group">
+				<button class="btn btn-primary btn-block" type="submit">登录</button>
+			</div>
+		</form>
+	</div>
+
+	<a href="#" class="btn btn-default" style="position:fixed;top:15px;right:15px;">注册</a>
+</body>
+<script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="/js/validate.js"></script>
+<script src="/js/js.js"></script>
+<script>$(function () {$('#loginForm').validate(); });</script>
+</html>

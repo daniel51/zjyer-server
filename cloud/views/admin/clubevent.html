@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/css/css.css">
+	<title><%= title %></title>
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="btn-group btn-group-sm">
+				<div class="btn btn-default" id="add">添加</div>
+				<div class="btn btn-default" id="delete">删除</div>
+				<div class="btn btn-default" id="edit">编辑</div>
+				<div class="btn-group btn-group-sm">
+					<div class="btn btn-default dropdown-toggle" data-toggle="dropdown">更多<span class="caret"></span></div>
+					<ul class="dropdown-menu dropdown-left" role="menu">
+			      <li><a href="#">菜单一</a></li>
+			      <li><a href="#">菜单二</a></li>
+			    </ul>
+				</div>
+			</div>
+			<p id="information" style="height:19px;"></p>
+			<table class="table table-bordered table-hover table-condensed" id="clubEventTable">
+				<thead>
+					<tr>
+						<th>序号</th>
+						<th>活动名称</th>
+						<th>活动介绍</th>
+						<th>场馆名称</th>
+						<th>场馆地址</th>
+						<th>开始时间</th>
+						<th>结束时间</th>
+						<th>男（元/人）</th>
+						<th>女（元/人）</th>
+						<th>限制人数</th>
+						<th>报名人数</th>
+						<th>联系电话</th>
+						<th>官方活动</th>
+					</tr>
+				</thead>
+				<tbody id="clubEventTbody">
+			
+					<% for (var i = 0; i < clubEvents.length; i++) { %>
+						<tr data-id="<%= clubEvents[i].id %>">
+							<td title="<%= i + 1 %>"><%= pagination.pageSize * (pagination.currentPageNum - 1) + (i + 1) %></td>
+							<td title="<%= clubEvents[i].get('eventname') %>">
+								<a class="cusr detail">
+									<%=: clubEvents[i].get('eventname') | formatString:8 %>
+								</a>
+							</td>
+							<td title="<%= clubEvents[i].get('eventintro') %>"><%=: clubEvents[i].get('eventintro') | formatString:10 %></td>
+							<td title="<%= clubEvents[i].get('venuename') %>"><%=: clubEvents[i].get('venuename') | formatString:10 %></td>
+							<td title="<%= clubEvents[i].get('venueaddress') %>"><%=: clubEvents[i].get('venueaddress') | formatString:16 %></td>
+							<td title="<%=: clubEvents[i].get('starttime') | formatDate %>"><%=: clubEvents[i].get('starttime') | formatDate %></td>
+							<td title="<%=: clubEvents[i].get('endtime') | formatDate %>"><%=: clubEvents[i].get('endtime') | formatDate %></td>
+							<td title="<%= clubEvents[i].get('mancost') %>"><%= clubEvents[i].get('mancost') %></td>
+							<td title="<%= clubEvents[i].get('womancost') %>"><%= clubEvents[i].get('womancost') %></td>
+							<td title="<%= clubEvents[i].get('numofpeople') %>"><%= clubEvents[i].get('numofpeople') %></td>
+							<td title="<%= clubEvents[i].get('enrollnumofpeople') %>"><%= clubEvents[i].get('enrollnumofpeople') %></td>
+							<td title="<%= clubEvents[i].get('phoneno') %>"><%= clubEvents[i].get('phoneno') %></td>
+							<td title="<%= clubEvents[i].get('official') %>"><%= clubEvents[i].get('official') %></td>
+						</tr>
+					<% } %>
+				</tbody>
+			</table>
+			<!-- 分页 -->
+			<nav>
+			  <ul class="pagination" style="margin-top:0">
+					<% if (pagination.currentPageNum === 1) { %>
+			    <li class="disabled"><span>&laquo;</span></li>
+					<% } else { %>
+					<li><a href="?page_num=<%= pagination.currentPageNum - 1 %>"><span>&laquo;</span></a></li>
+					<% } %>
+
+			    <% for (var i = 1; i <= pagination.pageCount; i++ ) { %>
+			    <li class="<%= pagination.currentPageNum === i ? 'active' : '' %>"><a href="?page_num=<%= i %>"><%= i %></a></li>
+			    <% } %>
+
+			    <% if (pagination.currentPageNum === pagination.pageCount) { %>
+			    <li class="disabled"><span>&raquo;</span></li>
+			    <% } else { %>
+			    <li><a href="?page_num=<%= pagination.currentPageNum + 1 %>"><span>&raquo;</span></a></li>
+			    <% } %>
+			  </ul>
+			</nav>
+			<!-- /分页 -->
+		</div>
+		<input type="hidden" name="csrfToken" id="csrfToken" value="<%= csrfToken %>">
+	</div>
+
+	<div class="modal fade" id="one-row-detail-modal">
+	  <div class="modal-dialog" style="width:550px">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title">数据预览</h4>
+	      </div>
+	      <div class="modal-body">
+	      	<div class="container-fluid">
+	      		<div class="row">
+	      			<div class="rela">
+	      				<div class="btn btn-default btn-sm" style="position:absolute;right:0;bottom:0">上传图片</div>
+				      	<!-- <img class="img-responsive" src="/1.jpg" alt=""> -->
+	      			</div>
+			      	<table class="table" id="detailTable"></table>
+	      		</div>
+	      	</div>
+	      </div>
+	      <div class="modal-footer"></div>
+	    </div>
+	  </div>
+	</div><!-- /.modal -->
+
+	<!-- 添加活动modal -->
+	<div class="modal fade" id="add-modal">
+	  <div class="modal-dialog" style="width:550px">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title">添加俱乐部活动</h4>
+	      </div>
+	      <div class="modal-body">
+	      	<div class="container-fluid">
+	      		<form action="/admin/addclubevent" method="post" class="form-horizontal" enctype="multipart/form-data">
+	      			<div class="form-group">
+	      				<label for="posterimage" class="col-sm-3 control-label">宣传图片</label>
+	      				<div class="col-sm-9 rela">
+	      					<input type="file" name="posterimage" id="posterimage" class="form-control">
+	      				</div>
+	      			</div>
+	      			<div class="form-group">
+	      				<label for="eventname" class="col-sm-3 control-label">活动名称</label>
+	      				<div class="col-sm-9">
+	      					<input type="text" name="eventname" id="eventname" class="form-control">
+	      				</div>
+	      			</div>
+	      			<div class="form-group">
+	      				<label for="eventintro" class="col-sm-3 control-label">活动介绍</label>
+	      				<div class="col-sm-9">
+	      					<textarea type="text" name="eventintro" id="eventintro" class="form-control" rows="5"></textarea>
+	      				</div>
+	      			</div>
+	      			<div class="form-group">
+	      				<label for="venuename" class="col-sm-3 control-label">场馆名称</label>
+	      				<div class="col-sm-9">
+	      					<input type="text" name="venuename" id="venuename" class="form-control">
+	      				</div>
+	      			</div>
+	      			<div class="form-group">
+	      				<label for="venueaddress" class="col-sm-3 control-label">场馆地址</label>
+	      				<div class="col-sm-9">
+	      					<input type="text" name="venueaddress" id="venueaddress" class="form-control">
+	      				</div>
+	      			</div>
+	      			<div class="form-group">
+	      				<label for="starttime" class="col-sm-3 control-label">开始时间</label>
+	      				<div class="col-sm-9">
+	      					<input type="text" name="starttime" id="starttime" class="form-control">
+	      				</div>
+	      			</div>
+	      			<div class="form-group">
+	      				<label for="endtime" class="col-sm-3 control-label">结束时间</label>
+	      				<div class="col-sm-9">
+	      					<input type="text" name="endtime" id="endtime" class="form-control">
+	      				</div>
+	      			</div>
+	      			<div class="form-group">
+	      				<label for="mancost" class="col-sm-3 control-label">男（元/人）</label>
+	      				<div class="col-sm-9">
+	      					<input type="text" name="mancost" id="mancost" class="form-control">
+	      				</div>
+	      			</div>
+	      			<div class="form-group">
+	      				<label for="womancost" class="col-sm-3 control-label">女（元/人）</label>
+	      				<div class="col-sm-9">
+	      					<input type="text" name="womancost" id="womancost" class="form-control">
+	      				</div>
+	      			</div>
+	      			<div class="form-group">
+	      				<label for="numofpeople" class="col-sm-3 control-label">限制人数</label>
+	      				<div class="col-sm-9">
+	      					<input type="text" name="numofpeople" id="numofpeople" class="form-control">
+	      				</div>
+	      			</div>
+	      			<div class="form-group">
+	      				<label for="official" class="col-sm-3 control-label">官方活动</label>
+	      				<div class="col-sm-9">
+	      					<label class="radio-inline">
+	      					  <input type="radio" name="official" value="0">是
+	      					</label>
+	      					<label class="radio-inline">
+	      					  <input type="radio" name="official" value="1">否
+	      					</label>
+	      				</div>
+	      			</div>
+	      			<div class="form-group">
+	      				<button class="btn btn-primary" type="submit">提交</button>
+	      				<button type="reset" data-dismiss="modal">取消</button>
+	      			</div>
+	      		</form>
+	      	</div>
+	      </div>
+	      <div class="modal-footer"></div>
+	    </div>
+	  </div>
+	</div><!-- /添加活动modal -->
+</body>
+<script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script>
+	$(function () {
+		var csrfToken = $('#csrfToken').val();
+		var $clubEventTable = $('#clubEventTable'), $clubEventTbody = $('#clubEventTbody');
+		var $deleteButton = $('#delete'), $editButton = $('#edit'), $addButton = $('#add');
+		var $information = $('#information');
+		var $detail = $('.detail'), $detailTable = $('#detailTable');
+		var $oneRowDetailModal = $('#one-row-detail-modal'), $addModal = $('#add-modal');
+		var thead;
+
+		$oneRowDetailModal.modal({
+			backdrop: 'static',
+			show: false
+		});
+
+		$addModal.modal({
+			backdrop: 'static',
+			show: false
+		});
+
+		// 单机查看详细链接弹出 modal
+		$detail.click(function () {
+			var $this = $(this), $tr = $this.closest('tr');
+			var detailData = [];
+			if (! thead) {
+				console.log('empty');
+				thead = [];
+				$clubEventTable.find('th').each(function () {
+					thead.push($(this).text());
+				});
+			}
+			$tr.find('td').each(function () {
+				detailData.push($(this).attr('title'));
+			});
+			var $tbody = $('<tbody/>');
+			for (var i = 0; i < thead.length; i++) {
+				$tbody.append('<tr><td>' + thead[i] + '</td><td>' + detailData[i] + '</td></tr>');
+			}
+			$detailTable.empty().append($tbody);
+			$oneRowDetailModal.modal('show');
+			return false;
+		});
+
+		// 单机行选中
+		$clubEventTbody.on('click', 'tr', function () {
+			var selectedCount;
+			$(this).toggleClass('info');
+			selectedCount = $clubEventTbody.find('tr.info').length;
+			if (selectedCount > 0) {
+				$information.text('选中' + selectedCount + '行');
+			} else {
+				$information.text('');
+			}
+		});
+
+		// 单机删除按钮操作
+		$deleteButton.click(function () {
+			var $selectedRow = $clubEventTbody.find('tr.info');
+			var ids = [];
+
+			// 有选中的行执行以下操作
+			if ($selectedRow.length > 0) {
+				$selectedRow.each(function () {
+					// 将选中的行 id 添加到数组
+					ids.push($(this).data('id'));
+				});
+				console.log('--qq--');
+				// 发送请求将制定行删除
+				$.get('/admin/deleteclubevent', {
+					ids: ids,
+					_csrf: csrfToken
+				}, function (data) {
+					console.log('---------');
+					console.log(data);
+				}, 'text');
+			}
+		});
+
+		// 单机添加按钮操作
+		$addButton.click(function () {
+			$addModal.modal('show');
+		});
+	});
+</script>
+</html>

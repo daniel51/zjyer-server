@@ -1,0 +1,161 @@
+/* 全局样式 */
+body{
+	font-family: "Helvetica Neue","Microsoft Yahei",Helvetica,Arial,sans-serif;
+}
+textarea{
+	resize:vertical;
+}
+.full-width{
+	width:100% !important;
+}
+.glassy{
+	opacity:0;
+	filter:alpha(opacity=0);
+}
+.rela{
+	position:relative;
+}
+.mg0{
+	margin:0;
+}
+.mt15{
+	margin-top:15px !important;
+}
+.pd0{
+	padding:0;
+}
+.cusr{
+	cursor:pointer;
+}
+.clr{
+	color:#b7282c !important;
+}
+.clr-whi{
+	color:#fff !important;
+}
+.bd-clr{
+	border-color:#b7282c !important;
+}
+.bg-clr{
+	background-color:#b7282c;
+}
+.error{
+	color:#a94442;
+}
+#show-errors{
+	position:fixed;
+	top:0;
+	left:0;
+	right:0;
+}
+
+#side-nav{
+	position:absolute;
+	top:0;
+	bottom:0;
+	min-height:500px;
+}
+
+/* 隐藏 file 表单域 */
+.hidd-file{
+	position:absolute;
+	top:0;
+	right:0;
+	bottom:0;
+	left:0;
+	width:100%;
+	opacity:0;
+	filter:alpha(opacity=0);
+}
+
+/* 场馆服务与特色标签样式 */
+.tag-container{margin-bottom:-15px;}
+.tag-container .btn-group{margin-bottom:15px;margin-right:15px;}
+/* 隐藏切图单选按钮 */
+.jcrop-holder .jcrop-keymgr{
+	opacity:0;
+	filter:alpha(opacity=0);
+}
+/* 重写 bootstrap */
+.navbar-default .navbar-nav>.open>a,
+.navbar-default .navbar-nav>.open>a:focus,
+.navbar-default .navbar-nav>.open>a:hover{
+	background:#d3282c;
+}
+.nav>li>a:focus,
+.nav>li>a:hover{
+	background-color:#d3282c;
+}
+.nav>li>a{
+	color:#fff !important;
+}
+.nav .collapse{
+	display:none;
+}
+.nav .collapse.in{
+	display:block;
+}
+.navbar{
+	border-radius:0;
+}
+.nav-pills img{
+	margin-right:10px;
+}
+.nav-pills .caret{
+	margin-top:5px;
+	float:right;
+}
+.list-group .list-group{
+	margin-bottom:0;
+}
+.collapse>.nav-pills>li>a{
+	padding:10px 15px 10px 45px;
+}
+.collapsing>.nav-pills>li>a{
+	padding:10px 15px 10px 45px;
+}
+.caret.fold{
+	margin-top:4px;
+	border-left: 4px dashed;
+	border-top: 4px solid transparent;
+	border-bottom: 4px solid transparent;
+}
+.panel-primary{
+	border-color:#b7282c;
+}
+.panel-primary>.panel-heading{
+	border-color:#b7282c;
+	background-color:#b7282c;
+}
+.form-control:focus{
+	border-color: #b7282c;
+	outline: 0;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(183,40,44,.6);
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(183,40,44,.6);
+}
+.form-group .help-block{
+	margin-bottom:0;
+}
+
+/* 隐藏百度地图标识 */
+.anchorBL{
+	display:none;
+}
+
+/* 首页概览数据 */
+.ttl-count{
+	text-align:center;
+	border-bottom:1px solid #eaeaea;
+}
+.ttl-count>div{
+	border-right:1px solid #eaeaea;
+}
+.ttl-count>div:last-child{
+	border-right:0;
+}
+.ttl-count .clr{
+	margin-right:5px;
+	line-height:60px;
+	font-size:45px;
+}
+
