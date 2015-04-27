@@ -14,9 +14,15 @@ app.get('/hello', function(req, res) {
 
 app.get('/jsonTest', function(req, res) {
     //res.render('hello', { message: 'Congrats, you just set up your app!' });
-    var ip = req.headers['x-real-ip']
+    var ip = req.headers['x-real-ip'];//获取ip地址
     res.json({'users': '小明','age':25,'ipAddress':ip});
 });
+
+var upload = require('upload');
+
+
+// 路由映射
+app.use('/upload', upload);
 
 
 // 最后，必须有这行代码来使 express 响应 HTTP 请求
