@@ -12,5 +12,12 @@ app.get('/hello', function(req, res) {
   res.render('hello', { message: 'Congrats, you just set up your app!' });
 });
 
+app.get('/jsonTest', function(req, res) {
+    //res.render('hello', { message: 'Congrats, you just set up your app!' });
+    var ip = req.headers['x-real-ip']
+    res.json({'users': '小明','age':25,'ipAddress':ip});
+});
+
+
 // 最后，必须有这行代码来使 express 响应 HTTP 请求
 app.listen();
