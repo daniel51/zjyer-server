@@ -28,13 +28,13 @@ textarea{
 	cursor:pointer;
 }
 .clr{
-	color:#b7282c !important;
+	color:#333333 !important;
 }
 .clr-whi{
 	color:#fff !important;
 }
 .bd-clr{
-	border-color:#b7282c !important;
+	border-color:#333333 !important;
 }
 .bg-clr{
 	background-color:#333333;
