@@ -8,7 +8,8 @@ exports.get_addVenue = function (req, res) {
 };
 
 exports.post_addVenue = function (req, res) {
-	var venue = AV.Object.new('Venue');
+    var Venue = AV.Object.extend("Venue");
+	var venue = new Venue();
 	var service = req.body.venueServiceData.split('×');
 	var chara = req.body.venueCharaData.split('×');
 	service.pop();
@@ -27,9 +28,11 @@ exports.post_addVenue = function (req, res) {
 
 	venue.save(null, {
 		success: function () {
+            console.log('-----success----');
 			res.send({redirectUrl: req.baseUrl + '/'});
 		},
 		error: function (obj, err) {
+            console.log(err);
 			res.send(500);
 		}
 	});

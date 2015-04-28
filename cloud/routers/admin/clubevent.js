@@ -90,7 +90,9 @@ exports.get_deleteClubEvent = function (req, res) {
 
 // 添加俱乐部活动
 exports.post_addClubEvent = function (req, res) {
-	var clubEventObj = AV.Object.new('ClubEvent');
+    var ClubEventObj = AV.Object.extend("ClubEvent");
+	var clubEventObj = new ClubEventObj();
+
 	
 	clubEventObj.set('eventname', req.body.eventname);
 	clubEventObj.set('eventintro', req.body.eventintro);
